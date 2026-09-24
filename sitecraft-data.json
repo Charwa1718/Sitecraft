@@ -1,0 +1,27 @@
+{
+  "site": "My first site",
+  "folders": [
+    {
+      "name": "Pages",
+      "open": true,
+      "items": [
+        {
+          "name": "Home",
+          "active": true,
+          "blocks": [
+            {
+              "kind": "text",
+              "title": "Welcome to my site",
+              "body": "Create pages, add photos and text, then save your site to GitHub so it appears on any device."
+            },
+            {
+              "kind": "html",
+              "title": "Welcome",
+              "body": "Please enjoy Sitecraft"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
