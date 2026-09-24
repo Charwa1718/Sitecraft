@@ -1,7 +1,9 @@
 # Sitecraft
 
-A browser-based Google Sites-style builder.
+A browser-based Google Sites-style builder for pages, folders, text boxes, photos, and HTML.
 
-## Use it
+## Save to GitHub
 
-Open `index.html` or enable GitHub Pages. Click **Create page** or **New folder**, then open a page and click **Add content**. Choose `text`, `photo`, or `html`. Photos are stored in the selected page as browser data and all changes are saved automatically in local storage. Use **Export HTML** to download the current page.
+Use **Save to GitHub** to publish the current page into this repository. GitHub requires a fine-grained personal access token with **Contents: Read and write** permission for `Charwa1718/Sitecraft`. The token is used in memory for the request and is not saved by Sitecraft.
+
+For a safer production version, put the GitHub API call behind a server or GitHub OAuth app instead of asking users for tokens in a browser.
