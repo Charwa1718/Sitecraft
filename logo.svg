@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Sitecraft hammer and site logo</title>
+  <desc id="desc">A blue house with a golden hammer</desc>
+  <defs>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#4169e1"/><stop offset="1" stop-color="#825cf6"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffd76a"/><stop offset="1" stop-color="#f59e0b"/></linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="30" fill="url(#blue)"/>
+  <path d="M20 61 64 27l44 34v42a7 7 0 0 1-7 7H27a7 7 0 0 1-7-7Z" fill="#fff" opacity=".96"/>
+  <path d="M13 61 64 21l51 40-8 10-43-34-43 34Z" fill="#dbe5ff"/>
+  <path d="M54 110V77h20v33" fill="url(#blue)"/>
+  <path d="m79 35 14 14-37 37-14-14Z" fill="url(#gold)" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
+  <path d="m84 30 14 14 9-9c3-3 3-7 0-10l-4-4c-3-3-7-3-10 0Z" fill="url(#gold)" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
+</svg>
