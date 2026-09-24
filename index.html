@@ -10,7 +10,7 @@
 <div id="app" class="app"><header class="top"><div class="logo"><img src="logo.svg" alt="Hammer and site">Sitecraft</div><button class="site" id="siteName" onclick="renameSite()">My first site ✎</button><div class="right"><span class="version" id="versionLabel">v27.1</span><button class="btn" id="checkUpdateButton" onclick="checkForUpdate()">Check for update</button><button class="btn danger" id="updateButton" onclick="requestUpdate()" style="display:none">Update available</button><button class="btn" onclick="requestIssue()">Request issue</button><button class="btn primary" onclick="downloadPage()">Export HTML</button></div></header><div class="layout"><aside class="side"><button class="new" onclick="createPage()">＋ Create page</button><span class="label">Pages & folders</span><div id="tree"></div><button onclick="createFolder()">＋ New folder</button></aside><main class="main"><div class="head"><h2 id="title">Home</h2></div><section id="canvas" class="canvas"></section></main></div></div>
 <div id="modal" class="modal-bg"><div class="modal"><h2 id="modalTitle"></h2><div id="modalBody"></div><div class="actions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="submitModal()">Continue</button></div></div></div><div id="toast" class="toast"></div>
 <script>
-const REPO='Charwa1718/Sitecraft';const KEY='sitecraft-data';const APP_VERSION='27.1';const VERSION_URL='https://raw.githubusercontent.com/'+REPO+'/main/sitecraft-version.json';let pendingUpdateVersion='';let data=JSON.parse(localStorage.getItem(KEY)||'null')||{site:'My first site',folders:[{name:'Pages',open:true,items:[{name:'Home',active:true,blocks:[{kind:'text',title:'Welcome to my site',body:'Create pages, photos, and text boxes, then submit a GitHub issue to review the site update.'}]}]}]},mode='',edit=-1,$=id=>document.getElementById(id),current=()=>data.folders.flatMap(f=>f.items||[]).find(p=>p.active)||data.folders[0].items[0],esc=s=>(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+const REPO='Charwa1718/Sitecraft';const KEY='sitecraft-data';const ADMIN_REQUEST_KEY='sitecraft-admin-requests';const APP_VERSION='27.1';const VERSION_URL='https://raw.githubusercontent.com/'+REPO+'/main/sitecraft-version.json';let pendingUpdateVersion='';let data=JSON.parse(localStorage.getItem(KEY)||'null')||{site:'My first site',folders:[{name:'Pages',open:true,items:[{name:'Home',active:true,blocks:[{kind:'text',title:'Welcome to my site',body:'Create pages, photos, and text boxes, then submit a GitHub issue to review the site update.'}]}]}]},mode='',edit=-1,$=id=>document.getElementById(id),current=()=>data.folders.flatMap(f=>f.items||[]).find(p=>p.active)||data.folders[0].items[0],esc=s=>(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
 function parseVersion(v){return (v||'0').split('.').map(n=>parseInt(n,10)||0);}
 function compareVersions(a,b){const av=parseVersion(a),bv=parseVersion(b);const max=Math.max(av.length,bv.length);for(let i=0;i<max;i++){const da=av[i]||0,db=bv[i]||0;if(da!==db)return da>db?1:-1;}return 0;}
 function updateVersionDisplay(){const v='v'+APP_VERSION;document.getElementById('versionLabel').textContent=v;document.getElementById('loginVersion').textContent=v;}
@@ -44,9 +44,22 @@ async function checkForUpdate(){
 }
 function requestUpdate(){
   if(!pendingUpdateVersion){toast('Check for an update first');return;}
-  const body='A newer Sitecraft version is available.\n\nRequested version: '+pendingUpdateVersion+'\nCurrent version: '+APP_VERSION+'\n\nPlease update the website.\n\nSaved site data:\n'+JSON.stringify(data,null,2);
-  window.open('https://github.com/'+REPO+'/issues/new?title='+encodeURIComponent('Website update request v'+pendingUpdateVersion)+'&body='+encodeURIComponent(body),'_blank');
-  toast('Update request opened');
+  const request={
+    id:Date.now(),
+    title:'Website update request v'+pendingUpdateVersion,
+    status:'pending',
+    body:'Requested version: '+pendingUpdateVersion+'\nCurrent version: '+APP_VERSION+'\n\nSaved site data:\n'+JSON.stringify(data,null,2),
+    createdAt:new Date().toISOString()
+  };
+  try{
+    const requests=JSON.parse(localStorage.getItem(ADMIN_REQUEST_KEY)||'[]');
+    requests.push(request);
+    localStorage.setItem(ADMIN_REQUEST_KEY,JSON.stringify(requests));
+    toast('Admin request sent');
+    setTimeout(()=>window.open('./Admin/', '_blank'),200);
+  }catch(error){
+    toast('Could not send admin request');
+  }
 }
 function toast(x){$('toast').textContent=x;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2200)}
 function localSave(){localStorage.setItem(KEY,JSON.stringify(data));toast('Saved on this device')}
