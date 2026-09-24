@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sitecraft Admin</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --line: #e5eaf2;
+      --text: #1c2435;
+      --muted: #66788f;
+      --blue: #4169e1;
+      --blue-soft: #eaf1ff;
+      --green: #1f9d63;
+      --green-soft: #eafaf2;
+      --red: #c93d4d;
+      --red-soft: #fff0f2;
+      --amber: #f7a11a;
+      --amber-soft: #fff7ea;
+      --shadow: 0 18px 40px rgba(28,36,53,.10);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+    }
+    .shell {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      min-height: 100vh;
+    }
+    .sidebar {
+      background: var(--panel);
+      border-right: 1px solid var(--line);
+      padding: 24px 18px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 18px;
+      margin-bottom: 24px;
+    }
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #eef3ff, #dfeaff);
+      font-size: 18px;
+    }
+    nav {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .nav-item {
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: transparent;
+      border: 1px solid transparent;
+      text-align: left;
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--muted);
+    }
+    .nav-item.active {
+      background: var(--blue-soft);
+      border-color: #d9e5ff;
+      color: var(--blue);
+    }
+    .content {
+      padding: 30px;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 30px;
+    }
+    .status-pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      background: var(--green-soft);
+      color: var(--green);
+      border: 1px solid #cfeee0;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(180px, 1fr));
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .metric {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-weight: 800;
+    }
+    .value {
+      font-size: 30px;
+      font-weight: 800;
+      margin-top: 12px;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .panel-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .panel-title {
+      font-size: 18px;
+      font-weight: 800;
+    }
+    .req-list {
+      padding: 12px;
+    }
+    .req {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      background: #fff;
+    }
+    .req-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      font-weight: 800;
+    }
+    .tag.pending { background: var(--amber-soft); color: var(--amber); border: 1px solid #f9dfac; }
+    .tag.approved { background: var(--green-soft); color: var(--green); border: 1px solid #cfeee0; }
+    .tag.rejected { background: var(--red-soft); color: var(--red); border: 1px solid #f7d3d9; }
+    .req h3 {
+      margin: 0 0 6px;
+      font-size: 18px;
+    }
+    .req p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+    .actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn.primary {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: white;
+    }
+    .btn.success {
+      background: var(--green-soft);
+      border-color: #cfeee0;
+      color: var(--green);
+    }
+    .btn.danger {
+      background: var(--red-soft);
+      border-color: #f7d3d9;
+      color: var(--red);
+    }
+    .empty {
+      padding: 24px;
+      color: var(--muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">🛠️</div>
+        <div>Sitecraft</div>
+      </div>
+      <nav>
+        <button class="nav-item active">Approvals</button>
+        <button class="nav-item">Settings</button>
+        <button class="nav-item">Audit log</button>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="topbar">
+        <h1>Admin</h1>
+        <div class="status-pill">Update moderation</div>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <div class="metric">Pending</div>
+          <div class="value" id="pendingCount">0</div>
+        </div>
+        <div class="card">
+          <div class="metric">Approved</div>
+          <div class="value" id="approvedCount">0</div>
+        </div>
+        <div class="card">
+          <div class="metric">Rejected</div>
+          <div class="value" id="rejectedCount">0</div>
+        </div>
+      </div>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Update requests</div>
+          <button class="btn primary" id="seedDataBtn">Seed sample request</button>
+        </div>
+        <div class="req-list" id="requestList"></div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const REQUEST_KEY = 'sitecraft-admin-requests';
+
+    function defaultRequests() {
+      return [
+        {
+          id: crypto.randomUUID(),
+          title: 'Website update request v27',
+          status: 'pending',
+          body: 'New version request for Sitecraft v27.\n\nRequested version: 27\nCurrent version: 27\n\nPlease update the site after approval.',
+          createdAt: new Date().toISOString()
+        }
+      ];
+    }
+
+    function loadRequests() {
+      const raw = localStorage.getItem(REQUEST_KEY);
+      if (!raw) {
+        const seed = defaultRequests();
+        localStorage.setItem(REQUEST_KEY, JSON.stringify(seed));
+        return seed;
+      }
+      try {
+        return JSON.parse(raw);
+      } catch {
+        const seed = defaultRequests();
+        localStorage.setItem(REQUEST_KEY, JSON.stringify(seed));
+        return seed;
+      }
+    }
+
+    function saveRequests(list) {
+      localStorage.setItem(REQUEST_KEY, JSON.stringify(list));
+    }
+
+    function updateCounts(list) {
+      const pending = list.filter(r => r.status === 'pending').length;
+      const approved = list.filter(r => r.status === 'approved').length;
+      const rejected = list.filter(r => r.status === 'rejected').length;
+      document.getElementById('pendingCount').textContent = pending;
+      document.getElementById('approvedCount').textContent = approved;
+      document.getElementById('rejectedCount').textContent = rejected;
+    }
+
+    function renderRequests() {
+      const list = loadRequests();
+      const container = document.getElementById('requestList');
+      updateCounts(list);
+
+      if (!list.length) {
+        container.innerHTML = '<div class="empty">No update requests yet.</div>';
+        return;
+      }
+
+      container.innerHTML = list.map(req => `
+        <div class="req">
+          <div class="req-head">
+            <h3>${escapeHtml(req.title || 'Update request')}</h3>
+            <span class="tag ${req.status}">${req.status}</span>
+          </div>
+          <p>${escapeHtml(req.body || 'No request details provided.')}</p>
+          <div class="actions">
+            <button class="btn success" data-action="approve" data-id="${req.id}">Approve</button>
+            <button class="btn danger" data-action="reject" data-id="${req.id}">Reject</button>
+          </div>
+        </div>
+      `).join('');
+
+      container.querySelectorAll('button[data-action]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.dataset.id;
+          const action = btn.dataset.action;
+          const requests = loadRequests();
+          const updated = requests.map(req => req.id === id ? { ...req, status: action } : req);
+          saveRequests(updated);
+          renderRequests();
+        });
+      });
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    document.getElementById('seedDataBtn').addEventListener('click', () => {
+      const requests = loadRequests();
+      requests.push({
+        id: crypto.randomUUID(),
+        title: 'Website update request v27',
+        status: 'pending',
+        body: 'Admin seed request:\n\nRequested version: 27\nCurrent version: 27\n\nApproved from admin panel after review.',
+        createdAt: new Date().toISOString()
+      });
+      saveRequests(requests);
+      renderRequests();
+    });
+
+    renderRequests();
+  </script>
+</body>
+</html>
