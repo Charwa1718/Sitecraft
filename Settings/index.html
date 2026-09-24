@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sitecraft Settings</title>
+<style>
+:root{--bg:#f6f8fc;--ink:#172033;--line:#e4e9f1;--blue:#4169e1;--soft:#eef2ff}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px system-ui,sans-serif}.wrap{width:min(680px,calc(100% - 32px));margin:40px auto}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:0 18px 40px #17203312}h1{margin:0 0 8px}.muted{color:#64748b}.row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;border-top:1px solid var(--line)}label{font-weight:800}.color{width:90px;height:48px;border:1px solid var(--line);border-radius:9px;background:#f6f8fc;cursor:pointer}.presets{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.preset{width:36px;height:36px;border-radius:50%;border:2px solid #fff;outline:1px solid var(--line);cursor:pointer}.btn{border:1px solid var(--line);border-radius:9px;background:#fff;padding:10px 14px;font-weight:700;cursor:pointer}.primary{background:var(--blue);border-color:var(--blue);color:#fff}.status{min-height:22px;color:#1f9d63;font-weight:700;margin-top:12px}.preview{margin-top:18px;padding:26px;border-radius:12px;border:1px solid var(--line);background:#f6f8fc}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.version{font-size:12px;font-weight:800;background:var(--soft);color:var(--blue);padding:6px 9px;border-radius:999px}@media(max-width:520px){.row{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="top"><div><h1>Sitecraft Settings</h1><div class="muted">Customize the site background color.</div></div><span class="version">v27.1.2</span></div><section class="card"><div class="row"><div><label for="backgroundColor">Background color</label><div class="muted">Choose the color used behind your Sitecraft content.</div></div><input id="backgroundColor" class="color" type="color" value="#f6f8fc"></div><div class="presets" aria-label="Background color presets"><button class="preset" title="Cloud" style="background:#f6f8fc" data-color="#f6f8fc"></button><button class="preset" title="Blue" style="background:#eef4ff" data-color="#eef4ff"></button><button class="preset" title="Mint" style="background:#effaf5" data-color="#effaf5"></button><button class="preset" title="Warm" style="background:#fff8ed" data-color="#fff8ed"></button><button class="preset" title="Lavender" style="background:#f7f1ff" data-color="#f7f1ff"></button></div><div class="actions" style="margin-top:22px"><button class="btn" id="reset">Reset</button><button class="btn primary" id="save">Save background</button></div><div id="status" class="status" role="status"></div><div class="preview" id="preview"><strong>Preview</strong><p class="muted">This is how the selected background color looks.</p></div></section></div>
+<script>
+const KEY='sitecraft-settings';
+const color=document.getElementById('backgroundColor');
+const preview=document.getElementById('preview');
+const status=document.getElementById('status');
+function validColor(value){return /^#[0-9a-f]{6}$/i.test(value)}
+function apply(value){if(!validColor(value))return;color.value=value;document.body.style.backgroundColor=value;preview.style.backgroundColor=value}
+function load(){try{const saved=JSON.parse(localStorage.getItem(KEY)||'{}');apply(saved.backgroundColor||'#f6f8fc')}catch{apply('#f6f8fc')}}
+function save(){const backgroundColor=color.value;localStorage.setItem(KEY,JSON.stringify({backgroundColor}));apply(backgroundColor);status.textContent='Background color saved.'}
+color.addEventListener('input',()=>apply(color.value));
+document.querySelectorAll('.preset').forEach(button=>button.addEventListener('click',()=>apply(button.dataset.color)));
+document.getElementById('save').addEventListener('click',save);
+document.getElementById('reset').addEventListener('click',()=>{apply('#f6f8fc');save()});
+load();
+</script>
+</body>
+</html>
